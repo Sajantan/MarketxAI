@@ -5,11 +5,13 @@ import { StockCard } from '@/components/StockCard';
 import { AIAnalysis } from '@/components/AIAnalysis';
 import { useStockData, StockData } from '@/hooks/useStockData';
 import { toast } from 'sonner';
-
 const Index = () => {
   const [stockData, setStockData] = useState<StockData | null>(null);
-  const { fetchStockData, loading, error } = useStockData();
-
+  const {
+    fetchStockData,
+    loading,
+    error
+  } = useStockData();
   const handleSearch = async (symbol: string) => {
     const data = await fetchStockData(symbol);
     if (data) {
@@ -18,9 +20,7 @@ const Index = () => {
       toast.error(error);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -30,7 +30,7 @@ const Index = () => {
                 <TrendingUp className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-xl font-bold">StockAI</h1>
+                <h1 className="text-xl font-bold">MarketxAI</h1>
                 <p className="text-xs text-muted-foreground">AI-Powered Analysis</p>
               </div>
             </div>
@@ -46,12 +46,11 @@ const Index = () => {
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-6">
-            <Brain className="h-4 w-4" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-6">Powered by YahooFinance<Brain className="h-4 w-4" />
             Powered by Advanced AI
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-gradient">AI Stock Predictor</span>
+            <span className="text-gradient">MarketxAI</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
             Enter any stock symbol to get real-time data and AI-powered analysis with predictions
@@ -62,23 +61,18 @@ const Index = () => {
         <StockSearch onSearch={handleSearch} loading={loading} />
 
         {/* Error State */}
-        {error && !loading && (
-          <div className="max-w-2xl mx-auto mt-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-center">
+        {error && !loading && <div className="max-w-2xl mx-auto mt-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-center">
             {error}
-          </div>
-        )}
+          </div>}
 
         {/* Results */}
-        {stockData && !loading && (
-          <div className="max-w-4xl mx-auto mt-12 space-y-6">
+        {stockData && !loading && <div className="max-w-4xl mx-auto mt-12 space-y-6">
             <StockCard data={stockData} />
             <AIAnalysis stockData={stockData} />
-          </div>
-        )}
+          </div>}
 
         {/* Empty State */}
-        {!stockData && !loading && !error && (
-          <div className="text-center mt-16">
+        {!stockData && !loading && !error && <div className="text-center mt-16">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-secondary/50 mb-6">
               <TrendingUp className="h-10 w-10 text-muted-foreground" />
             </div>
@@ -88,8 +82,7 @@ const Index = () => {
             <p className="text-muted-foreground/70">
               Enter a stock symbol above to get started
             </p>
-          </div>
-        )}
+          </div>}
       </main>
 
       {/* Footer */}
@@ -100,8 +93,6 @@ const Index = () => {
           </p>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
