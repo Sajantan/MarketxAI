@@ -21,7 +21,7 @@ serve(async (req) => {
     }
 
     const response = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol.toUpperCase()}?interval=1d&range=1d`,
+      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol.toUpperCase()}?interval=1d&range=3mo`,
       {
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -48,11 +48,21 @@ serve(async (req) => {
     const quote = data.chart.result[0];
     const meta = quote.meta;
     const indicators = quote.indicators.quote[0];
+    const timestamps = quote.timestamp || [];
 
     const currentPrice = meta.regularMarketPrice;
     const previousClose = meta.previousClose || meta.chartPreviousClose;
     const change = currentPrice - previousClose;
     const changePercent = (change / previousClose) * 100;
+
+    const historicalPrices = timestamps.map((ts: number, i: number) => ({
+      date: new Date(ts * 1000).toISOString().split('T')[0],
+      close: indicators.close?.[i] ?? null,
+      high: indicators.high?.[i] ?? null,
+      low: indicators.low?.[i] ?? null,
+      open: indicators.open?.[i] ?? null,
+      volume: indicators.volume?.[i] ?? null,
+    })).filter((p: any) => p.close !== null);
 
     const stockData = {
       symbol: meta.symbol,
@@ -60,13 +70,14 @@ serve(async (req) => {
       price: currentPrice,
       change: parseFloat(change.toFixed(2)),
       changePercent: parseFloat(changePercent.toFixed(2)),
-      dayHigh: meta.regularMarketDayHigh || indicators.high?.[0] || currentPrice,
-      dayLow: meta.regularMarketDayLow || indicators.low?.[0] || currentPrice,
+      dayHigh: meta.regularMarketDayHigh || indicators.high?.[indicators.high.length - 1] || currentPrice,
+      dayLow: meta.regularMarketDayLow || indicators.low?.[indicators.low.length - 1] || currentPrice,
       previousClose: previousClose,
-      volume: meta.regularMarketVolume || indicators.volume?.[0] || 0,
+      volume: meta.regularMarketVolume || indicators.volume?.[indicators.volume.length - 1] || 0,
       marketCap: meta.marketCap || 0,
       fiftyTwoWeekHigh: meta.fiftyTwoWeekHigh || 0,
       fiftyTwoWeekLow: meta.fiftyTwoWeekLow || 0,
+      historicalPrices,
     };
 
     return new Response(JSON.stringify(stockData), {

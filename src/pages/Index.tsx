@@ -3,15 +3,14 @@ import { TrendingUp, Zap, Brain } from 'lucide-react';
 import { StockSearch } from '@/components/StockSearch';
 import { StockCard } from '@/components/StockCard';
 import { AIAnalysis } from '@/components/AIAnalysis';
+import { PriceChart } from '@/components/PriceChart';
 import { useStockData, StockData } from '@/hooks/useStockData';
 import { toast } from 'sonner';
+
 const Index = () => {
   const [stockData, setStockData] = useState<StockData | null>(null);
-  const {
-    fetchStockData,
-    loading,
-    error
-  } = useStockData();
+  const { fetchStockData, loading, error } = useStockData();
+
   const handleSearch = async (symbol: string) => {
     const data = await fetchStockData(symbol);
     if (data) {
@@ -20,8 +19,9 @@ const Index = () => {
       toast.error(error);
     }
   };
-  return <div className="min-h-screen bg-background">
-      {/* Header */}
+
+  return (
+    <div className="min-h-screen bg-background">
       <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -42,11 +42,11 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
-        {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-6">Powered by YahooFinance<Brain className="h-4 w-4" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-6">
+            Powered by YahooFinance
+            <Brain className="h-4 w-4" />
             Powered by Advanced AI
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -57,22 +57,24 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Search */}
         <StockSearch onSearch={handleSearch} loading={loading} />
 
-        {/* Error State */}
-        {error && !loading && <div className="max-w-2xl mx-auto mt-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-center">
+        {error && !loading && (
+          <div className="max-w-2xl mx-auto mt-8 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-center">
             {error}
-          </div>}
+          </div>
+        )}
 
-        {/* Results */}
-        {stockData && !loading && <div className="max-w-4xl mx-auto mt-12 space-y-6">
+        {stockData && !loading && (
+          <div className="max-w-4xl mx-auto mt-12 space-y-6">
             <StockCard data={stockData} />
+            <PriceChart data={stockData} />
             <AIAnalysis stockData={stockData} />
-          </div>}
+          </div>
+        )}
 
-        {/* Empty State */}
-        {!stockData && !loading && !error && <div className="text-center mt-16">
+        {!stockData && !loading && !error && (
+          <div className="text-center mt-16">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-secondary/50 mb-6">
               <TrendingUp className="h-10 w-10 text-muted-foreground" />
             </div>
@@ -82,10 +84,10 @@ const Index = () => {
             <p className="text-muted-foreground/70">
               Enter a stock symbol above to get started
             </p>
-          </div>}
+          </div>
+        )}
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-border/50 mt-auto py-6">
         <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
           <p>
@@ -93,6 +95,8 @@ const Index = () => {
           </p>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;

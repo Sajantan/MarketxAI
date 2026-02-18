@@ -1,5 +1,14 @@
 import { useState } from 'react';
 
+export interface HistoricalPrice {
+  date: string;
+  close: number;
+  high: number;
+  low: number;
+  open: number;
+  volume: number;
+}
+
 export interface StockData {
   symbol: string;
   name: string;
@@ -13,6 +22,7 @@ export interface StockData {
   marketCap: number;
   fiftyTwoWeekHigh: number;
   fiftyTwoWeekLow: number;
+  historicalPrices: HistoricalPrice[];
 }
 
 export function useStockData() {
