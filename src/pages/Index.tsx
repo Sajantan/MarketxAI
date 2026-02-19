@@ -91,7 +91,10 @@ const Index = () => {
       <footer className="border-t border-border/50 mt-auto py-6">
         <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
           <p>
-            ⚠️ AI predictions are for informational purposes only. Not financial advice.
+          ⚠️ AI predictions are for informational purposes only. Not financial advice.
+          </p>
+          <p className="mt-2">
+            © 2025 Sajantan Srivel. All rights reserved.
           </p>
         </div>
       </footer>
